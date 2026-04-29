@@ -1,21 +1,47 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using MyData.Interface;
 using MyData.Models;
+using WebApiAchivers.Services;
 
 namespace WebApiAchivers.Controllers
 {
+    public class LoginRequest
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
+
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UsersOpsController : ControllerBase
     {
         public readonly IUsers _service;
-        public UsersOpsController(IUsers userbl)
+
+        private readonly JwtService _jwtService;
+        public UsersOpsController(IUsers userbl, JwtService jwtService)
         {
             _service = userbl;
+            _jwtService = jwtService;
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest request)
+        {
+            // Demo validation (replace with DB check)
+            if (request.Username == "admin" && request.Password == "1234")
+            {
+                var token = _jwtService.GenerateToken(request.Username);
+                return Ok(new { token });
+            }
+            return Unauthorized();
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> UsersData()
         {
             var res = await _service.GetAllUsers();//users
