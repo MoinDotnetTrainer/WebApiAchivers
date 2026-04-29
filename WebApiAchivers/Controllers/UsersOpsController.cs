@@ -50,6 +50,7 @@ namespace WebApiAchivers.Controllers
 
         // CREATE
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddUser([FromBody] Users data)
         {
             if (data == null)
@@ -61,6 +62,7 @@ namespace WebApiAchivers.Controllers
 
         // READ (BY ID)
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _service.GetUserByID(id);
@@ -73,6 +75,7 @@ namespace WebApiAchivers.Controllers
 
         // UPDATE
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] Users data)
         {
             if (id != data.ID)
@@ -87,8 +90,8 @@ namespace WebApiAchivers.Controllers
         }
 
         // DELETE
-        [HttpDelete("{id}")]
-      
+        [HttpDelete("{id}")]  //action 
+        [Authorize] // action filter
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _service.GetUserByID(id);

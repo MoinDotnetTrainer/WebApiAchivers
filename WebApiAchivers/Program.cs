@@ -1,7 +1,6 @@
-using Asp.Versioning.Conventions;
+
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -35,21 +34,24 @@ namespace WebApiAchivers
             // Middleware config for APi Versoning
             //api versioning dependency
 
+            //api versioning dependency
             builder.Services.AddApiVersioning(options =>
             {
-                // Default version when not specified
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.ReportApiVersions = true;
-
-                // IMPORTANT: URL versioning (/api/v{version}/...)
-                options.ApiVersionReader = new UrlSegmentApiVersionReader();
-            })
-            .AddApiExplorer(options =>
+                options.AssumeDefaultVersionWhenUnspecified = true; // if no version is specied the application will exe default method 
+                options.DefaultApiVersion = new Asp.Versioning.ApiVersion(1, 0); // if verison id specid this will execute
+                options.ReportApiVersions = true;  // responce header inluces supported version
+            }).AddMvc(o =>
             {
-                // Swagger grouping format
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
+                // Change this line:
+                // o.Conventions.Add(new VersionByNamespaceConvention()); //version controller based on their namespace
+
+                // To this:
+                o.Conventions.Add(new Asp.Versioning.Conventions.VersionByNamespaceConvention()); // version controller based on their namespace
+                   
+            }).AddApiExplorer(x =>
+            {
+                x.GroupNameFormat = "'v'V";
+                x.SubstituteApiVersionInUrl = true; // this helpful for swagger
             });
 
 

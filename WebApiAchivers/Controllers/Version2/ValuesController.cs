@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiAchivers.Controllers.Version2
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/Values")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("2.0")]
     public class ValuesController : ControllerBase
     {
